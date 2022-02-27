@@ -7,6 +7,8 @@ export const TwitterContext = createContext()
 export const TwitterProvider = ({ children }) => {
   const [appStatus, setAppStatus] = useState('')
   const [currentAccount, setCurrentAccount] = useState('')
+  const [tweets, setTweets] = useState([])
+  const [currentUser, setCurrentUser] = useState({})
 
   const router = useRouter()
 
@@ -16,15 +18,14 @@ export const TwitterProvider = ({ children }) => {
 
   const checkIfWalletIsConnected = async () => {
     if (!window.ethereum) return setAppStatus('noMetaMask')
-
     try {
       const addressArray = await window.ethereum.request({
         method: 'eth_accounts',
       })
-
       if (addressArray.length > 0) {
         setAppStatus('connected')
         setCurrentAccount(addressArray[0])
+
         createUserAccount(addressArray[0])
       } else {
         router.push('/')
@@ -32,13 +33,13 @@ export const TwitterProvider = ({ children }) => {
       }
     } catch (err) {
       console.log(err)
+      router.push('/')
       setAppStatus('error')
     }
   }
 
   const connectWallet = async () => {
     if (!window.ethereum) return setAppStatus('noMetaMask')
-
     try {
       setAppStatus('loading')
 
@@ -80,6 +81,7 @@ export const TwitterProvider = ({ children }) => {
       }
       // create userDoc if there's no user
       await client.createIfNotExists(userDoc)
+
       setAppStatus('connected')
     } catch (err) {
       console.log(err)
@@ -88,9 +90,75 @@ export const TwitterProvider = ({ children }) => {
     }
   }
 
+  /**
+   * Gets all the tweets stored in Sanity DB.
+   */
+  const fetchTweets = async () => {
+    const query = `
+      *[_type == "tweets"]{
+        "author": author->{name, walletAddress, profileImage, isProfileImageNft},
+        tweet,
+        timestamp
+      }|order(timestamp desc)
+    `
+    const sanityResponse = await client.fetch(query)
+
+    setTweets([])
+
+    sanityResponse.forEach(async (items) => {
+      // profileImage
+
+      const newItem = {
+        tweet: items.tweet,
+        timestamp: items.timestamp,
+        author: {
+          name: items.author.name,
+          walletAddress: items.author.walletAddress,
+          isProfileImageNft: items.author.isProfileImageNft,
+          profileImage: items.author.profileImage,
+        },
+      }
+      setTweets((prevState) => [...prevState, newItem])
+    })
+  }
+
+  const getCurrentUserDetails = async (userAccount = currentAccount) => {
+    if (appStatus !== 'connected') return
+
+    const query = `
+      *[_type == "users" && _id == "${userAccount}"]{
+        "tweets": tweets[]->{timestamp, tweet}|order(timestamp desc),
+        name,
+        profileImage,
+        isProfileImageNft,
+        coverImage,
+        walletAddress
+      }
+    `
+
+    const sanityResponse = await client.fetch(query)
+
+    setCurrentUser({
+      tweets: sanityResponse[0].tweets,
+      name: sanityResponse[0].name,
+      profileImage: sanityResponse[0].profileImage,
+      isProfileImageNft: sanityResponse[0].isProfileImageNft,
+      coverImage: sanityResponse[0].coverImage,
+      walletAddress: sanityResponse[0].walletAddress,
+    })
+  }
+
   return (
     <TwitterContext.Provider
-      value={{ appStatus, currentAccount, connectWallet }}
+      value={{
+        appStatus,
+        currentAccount,
+        connectWallet,
+        fetchTweets,
+        tweets,
+        currentUser,
+        getCurrentUserDetails,
+      }}
     >
       {children}
     </TwitterContext.Provider>
