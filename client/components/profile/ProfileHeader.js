@@ -1,5 +1,7 @@
+import { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { BsArrowLeftShort } from 'react-icons/bs'
+import { TwitterContext } from '../../context/TwitterContext'
 
 const style = {
   wrapper: `border-[#38444d] border-b`,
@@ -21,7 +23,8 @@ const style = {
 const ProfileHeader = () => {
   const router = useRouter()
   const isProfileImageNft = false
-  const currentAccount = '0x5c2FBe8585e8C1aBcfCBC2765629c3d479fAE077'
+
+  const { currentAccount, currentUser } = useContext(TwitterContext)
 
   return (
     <div className={style.wrapper}>
@@ -30,23 +33,26 @@ const ProfileHeader = () => {
           <BsArrowLeftShort />
         </div>
         <div className={style.details}>
-          <div className={style.primary}>Brandyman</div>
-          <div className={style.secondary}>3 Tweets</div>
+          <div className={style.primary}>{currentUser.name}</div>
+          <div className={style.secondary}>
+            {currentUser.tweets?.length}{' '}
+            {currentUser.tweets?.length === 1 ? 'Tweet' : 'Tweets'}
+          </div>
         </div>
       </div>
       <div className={style.coverPhotoContainer}>
         <img
-          src="https://global-uploads.webflow.com/606076d78f6b1c80e91a9a0a/61be2080231f951b824fcd72_geCjGB1ZL884a7d19gd5FP-ZH3Jy8yNKOfVqI1YYIsVDnfZj5YrTizxJL3wBoCUcS-YKTvA4hXYn_6TCMNSPNvAaD9k7KKqKITz_8dp1IT4B1kkWKkPXKg2KXhXcd1xyRSoUyRfN.jpeg"
+          src={currentUser.coverImage}
           alt="cover"
           className={style.coverPhoto}
         />
       </div>
       <div className={style.profileImageContainer}>
         <div
-          className={isProfileImageNft ? 'hex' : style.profileImageContainer}
+          className={currentUser.isProfileImageNft ? 'hex' : style.profileImageContainer}
         >
           <img
-            src="https://pbs.twimg.com/profile_images/1496007375119007744/YiMZsfZ4_400x400.jpg"
+            src={currentUser.profileImage}
             alt="profile"
             className={
               isProfileImageNft ? style.profileImageNft : style.profileImage
@@ -56,7 +62,7 @@ const ProfileHeader = () => {
       </div>
       <div className={style.details}>
         <div>
-          <div className={style.primary}>Brandyman</div>
+          <div className={style.primary}>{currentUser.name}</div>
         </div>
         <div>
           <div className={style.secondary}>

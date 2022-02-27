@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import SidebarOption from './SidebarOption'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useContext, useEffect, useState } from 'react'
+import { TwitterContext } from '../context/TwitterContext'
 import { BiHash } from 'react-icons/bi'
 import { VscTwitter } from 'react-icons/vsc'
 import { FaHashtag, FaBell } from 'react-icons/fa'
@@ -11,6 +11,7 @@ import { CgMoreO, CgMoreVerticalO } from 'react-icons/cg'
 import { FiBell, FiMoreHorizontal } from 'react-icons/fi'
 import { RiHome7Line, RiHome7Fill } from 'react-icons/ri'
 import { IoBookmarkOutline, IoBookmark } from 'react-icons/io5'
+import SidebarOption from './SidebarOption'
 
 const style = {
   wrapper: `flex-[0.7] px-8 flex flex-col`,
@@ -29,6 +30,10 @@ const style = {
 
 const Sidebar = ({ initialSelectedIcon = 'Home' }) => {
   const [selected, setSelected] = useState(initialSelectedIcon)
+  const { currentAccount, currentUser, tweets } = useContext(TwitterContext)
+
+  const router = useRouter()
+
   return (
     <div className={style.wrapper}>
       <div className={style.twitterIconContainer}>
@@ -85,20 +90,38 @@ const Sidebar = ({ initialSelectedIcon = 'Home' }) => {
           redirect={'/profile'}
         />
         <SidebarOption
-          Icon={selected === 'More' ?  CgMoreVerticalO : CgMoreO}
+          Icon={selected === 'More' ? CgMoreVerticalO : CgMoreO}
           text="More"
           isActive={Boolean(selected === 'More')}
           setSelected={setSelected}
-          redirect={'/'}
         />
-        <div className={style.tweetButton}>Mint</div>
+        <div
+          onClick={() => {
+            router.push(`${router.pathname}/?mint=${currentAccount}`)
+          }}
+          className={style.tweetButton}
+        >
+          Mint
+        </div>
       </div>
       <div className={style.profileButton}>
-        <div className={style.profileLeft}></div>
+        <div className={style.profileLeft}>
+          <img
+            src={currentUser.profileImage}
+            alt="profile"
+            className={
+              currentUser.isProfileImageNft
+                ? `${style.profileImage} smallHex`
+                : style.profileImage
+            }
+          />
+        </div>
         <div className={style.profileRight}>
           <div className={style.details}>
-            <div className={style.name}>brandy14045</div>
-            <div className={style.handle}>0x5c2f...e077</div>
+            <div className={style.name}>{currentUser.name}</div>
+            <div className={style.handle}>
+              @{currentAccount.slice(0, 6)}...{currentAccount.slice(-4)}
+            </div>
           </div>
           <div className={style.moreContainer}>
             <FiMoreHorizontal />

@@ -82,7 +82,11 @@ const Home = () => {
 
   const loading = (
     <div className={style.loadingContainer}>
-      <Loader color="#808080" loading={appStatus === 'loading'} size={50} />
+      <Loader
+        color="#808080"
+        loading={Boolean(appStatus === 'loading')}
+        size={50}
+      />
     </div>
   )
 
