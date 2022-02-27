@@ -1,5 +1,4 @@
 import { useContext } from 'react'
-import { Grid } from 'react-loader-spinner'
 import { TwitterContext } from '../context/TwitterContext'
 import Image from 'next/image'
 import Feed from '../components/home/Feed'
@@ -7,14 +6,15 @@ import Sidebar from '../components/Sidebar'
 import Widgets from '../components/Widgets'
 import errorImg from '../assets/error.png'
 import metamaskLogo from '../assets/metamask.png'
+import Loader from 'react-spinners/GridLoader'
 
 const style = {
   wrapper: `flex justify-center h-screen w-screen select-none bg-[#15202b] text-white`,
   content: `max-w-[1400px] w-2/3 flex justify-between`,
+  loadingContainer: `w-full h-full flex flex-col justify-center items-center`,
   loginContainer: `w-full h-full flex flex-col justify-center items-center pb-48`,
   walletConnectButton: `text-2xl text-black bg-white font-bold mb-[-3rem] mt-[3rem] px-6 py-4 rounded-full cursor-pointer hover:bg-[#d7dbdc]`,
   loginContent: `text-3xl font-bold text-center mt-24`,
-  loadingContent: `mt-24`,
 }
 
 const Home = () => {
@@ -81,10 +81,8 @@ const Home = () => {
   )
 
   const loading = (
-    <div className={style.loginContainer}>
-      <div className={style.loadingContent}>
-        <Grid color="rgb(128, 128, 128)" height={150} width={150} />
-      </div>
+    <div className={style.loadingContainer}>
+      <Loader color="#808080" loading={appStatus === 'loading'} size={50} />
     </div>
   )
 
