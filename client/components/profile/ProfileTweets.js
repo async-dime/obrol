@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { TwitterContext } from '../../context/TwitterContext'
+import { TwitterContext } from '@/context/TwitterContext'
 import Post from '../Post'
 
 const style = {

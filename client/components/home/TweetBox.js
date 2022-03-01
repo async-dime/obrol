@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react'
-import { TwitterContext } from '../../context/TwitterContext'
+import { TwitterContext } from '@/context/TwitterContext'
 import { BsCardImage, BsEmojiSmile } from 'react-icons/bs'
 import { RiFileGifLine, RiBarChartHorizontalFill } from 'react-icons/ri'
 import { IoMdCalendar } from 'react-icons/io'
 import { MdOutlineLocationOn } from 'react-icons/md'
-import { client } from '../../lib/client'
+import { client } from '@/lib/client'
 
 const style = {
   wrapper: `px-4 flex flex-row border-b border-[#38444d] pb-4`,

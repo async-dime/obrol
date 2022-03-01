@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react'
-import { TwitterContext } from '../../context/TwitterContext'
+import { TwitterContext } from '@/context/TwitterContext'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import check from '../../assets/check.svg'
+import check from '@/assets/check.svg'
 
 const style = {
   wrapper: `h-[20rem] w-[35rem] text-white bg-[#15202b] rounded-3xl p-10 flex flex-col items-center justify-center`,

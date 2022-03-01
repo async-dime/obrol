@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { BsArrowLeftShort } from 'react-icons/bs'
-import { TwitterContext } from '../../context/TwitterContext'
+import { TwitterContext } from '@/context/TwitterContext'
 
 const style = {
   wrapper: `border-[#38444d] border-b`,

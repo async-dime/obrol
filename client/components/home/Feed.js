@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { TwitterContext } from '../../context/TwitterContext'
+import { TwitterContext } from '@/context/TwitterContext'
 import { BsStars } from 'react-icons/bs'
 import TweetBox from './TweetBox'
 import Post from '../Post'
