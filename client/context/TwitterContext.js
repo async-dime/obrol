@@ -96,6 +96,14 @@ export const TwitterProvider = ({ children }) => {
     }
   }
 
+  const getProfileImageUrl = async (imageUri, isNft) => {
+    if (isNft) {
+      return `https://gateway.pinata.cloud/ipfs/${imageUri}`
+    } else {
+      return imageUri
+    }
+  }
+
   /**
    * Gets all the tweets stored in Sanity DB.
    */
@@ -111,19 +119,23 @@ export const TwitterProvider = ({ children }) => {
 
     setTweets([])
 
-    sanityResponse.forEach(async (items) => {
-      // profileImage
+    sanityResponse.forEach(async (item) => {
+      const profileImgUrl = await getProfileImageUrl(
+        item.author.profileImage,
+        item.author.isProfileImageNft
+      )
 
       const newItem = {
-        tweet: items.tweet,
-        timestamp: items.timestamp,
+        tweet: item.tweet,
+        timestamp: item.timestamp,
         author: {
-          name: items.author.name,
-          walletAddress: items.author.walletAddress,
-          isProfileImageNft: items.author.isProfileImageNft,
-          profileImage: items.author.profileImage,
+          name: item.author.name,
+          walletAddress: item.author.walletAddress,
+          isProfileImageNft: item.author.isProfileImageNft,
+          profileImage: profileImgUrl,
         },
       }
+
       setTweets((prevState) => [...prevState, newItem])
     })
   }
@@ -144,10 +156,15 @@ export const TwitterProvider = ({ children }) => {
 
     const sanityResponse = await client.fetch(query)
 
+    const profileImageUrl = await getProfileImageUrl(
+      sanityResponse[0].profileImage,
+      sanityResponse[0].isProfileImageNft
+    )
+
     setCurrentUser({
       tweets: sanityResponse[0].tweets,
       name: sanityResponse[0].name,
-      profileImage: sanityResponse[0].profileImage,
+      profileImage: profileImageUrl,
       isProfileImageNft: sanityResponse[0].isProfileImageNft,
       coverImage: sanityResponse[0].coverImage,
       walletAddress: sanityResponse[0].walletAddress,

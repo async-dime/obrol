@@ -11,7 +11,10 @@ import { CgMoreO, CgMoreVerticalO } from 'react-icons/cg'
 import { FiBell, FiMoreHorizontal } from 'react-icons/fi'
 import { RiHome7Line, RiHome7Fill } from 'react-icons/ri'
 import { IoBookmarkOutline, IoBookmark } from 'react-icons/io5'
+import { customStyles } from '../lib/constants'
+import Modal from 'react-modal'
 import SidebarOption from './SidebarOption'
+import ProfileImageMinter from './mintingModal/ProfileImageMinter'
 
 const style = {
   wrapper: `flex-[0.7] px-8 flex flex-col`,
@@ -128,6 +131,14 @@ const Sidebar = ({ initialSelectedIcon = 'Home' }) => {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={Boolean(router.query.mint)}
+        onRequestClose={() => router.back()}
+        style={customStyles}
+      >
+        <ProfileImageMinter />
+      </Modal>
     </div>
   )
 }

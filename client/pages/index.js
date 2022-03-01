@@ -4,8 +4,8 @@ import Image from 'next/image'
 import Feed from '../components/home/Feed'
 import Sidebar from '../components/Sidebar'
 import Widgets from '../components/Widgets'
-import errorImg from '../assets/error.png'
-import metamaskLogo from '../assets/metamask.png'
+import errorImg from '../assets/error.svg'
+import metamaskLogo from '../assets/metamask.svg'
 import Loader from 'react-spinners/GridLoader'
 
 const style = {
@@ -84,7 +84,7 @@ const Home = () => {
     <div className={style.loadingContainer}>
       <Loader
         color="#808080"
-        loading={Boolean(appStatus === 'loading')}
+        loading={true}
         size={50}
       />
     </div>
